@@ -107,13 +107,6 @@ const data = [
   },
 ];
 
-// setup the recurrent neural network (RNN)
-const network = new brain.recurrent.LSTM();
-const trainData = data.map((email) => ({
-  input: removeStopWords(tokenize(email.subject.toLowerCase())),
-  output: email.type,
-}));
-
 // tokenizing string
 function tokenize(str) {
   return str.split(" ");
@@ -136,6 +129,13 @@ const stopWords = new Set([
 function removeStopWords(tokens) {
   return tokens.filter((token) => !stopWords.has(token));
 }
+
+// setup the recurrent neural network (RNN)
+const network = new brain.recurrent.LSTM();
+const trainData = data.map((email) => ({
+  input: removeStopWords(tokenize(email.subject.toLowerCase())),
+  output: email.type,
+}));
 
 network.train(trainData, {
   iterations: 2000,
