@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Machine Learning</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        font-family: "Roboto", sans-serif;
+      }
+      .main {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        background: #f0f0f0;
+        gap: 20px;
+        height: 100%;
+        margin: auto 0;
+        padding: 50px;
+      }
+      @media (width >= 768px) {
+        .main > button,
+        input {
+          padding: 20px !important;
+          width: 50% !important;
+        }
+      }
+      .main > input {
+        padding: 10px;
+        border-radius: 5px;
+        border: 2px solid #000000;
+        outline: none;
+        width: 100%;
+        font-size: 20px;
+      }
+      .main > button {
+        width: 100%;
+        border-radius: 5px;
+        padding: 10px;
+        border: none;
+        outline: none;
+        background: green;
+        color: white;
+        font-weight: 500;
+        font-size: 20px;
+        cursor: pointer;
+      }
+      .output, h1{
+        width: 100%;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="main">
+      <h1>Email Filtering System</h1>
+      <p>Check if you are getting any spam email</p>
+      <input type="text" placeholder="Enter keywords i.e. Save upto 50% etc" />
+      <button>Run</button>
+      <div class="output"></div>
+    </div>
+    <script src="//unpkg.com/brain.js"></script>
+    <script>
+      const data = [
+        {
+          subject: "50% off",
+          type: [0],
+        },
+        {
+          subject: "Save up to 50% off",
+          type: [0],
+        },
+        {
+          subject: "Limited time offer",
+          type: [0],
+        },
+        {
+          subject: "Save money",
+          type: [0],
+        },
+        {
+          subject: "Find a deal",
+          type: [0],
+        },
+        {
+          subject: "Apple now",
+          type: [0],
+        },
+        {
+          subject: "Act now",
+          type: [0],
+        },
+        {
+          subject: "Save up to",
+          type: [0],
+        },
+        {
+          subject: "Find out if you qualify",
+          type: [0],
+        },
+        {
+          subject: "you are eligible",
+          type: [0],
+        },
+        {
+          subject: "eligible to be activate",
+          type: [0],
+        },
+        {
+          subject: "affordable plan",
+          type: [0],
+        },
+        {
+          subject: "Jim has replied your post",
+          type: [1],
+        },
+        {
+          subject: "John has liked your post",
+          type: [1],
+        },
+        {
+          subject: "replied you",
+          type: [1],
+        },
+        {
+          subject: "like your post",
+          type: [1],
+        },
+        {
+          subject: "Account statement",
+          type: [1],
+        },
+        {
+          subject: "Your order",
+          type: [1],
+        },
+        {
+          subject: "commented on",
+          type: [1],
+        },
+        {
+          subject: "Saqib has commented on your post",
+          type: [1],
+        },
+        {
+          subject: "81 has commented and liked your post",
+          type: [1],
+        },
+        {
+          subject: "package delivered",
+          type: [1],
+        },
+        {
+          subject: "resume",
+          type: [1],
+        },
+        {
+          subject: "coding exercises",
+          type: [1],
+        },
+        {
+          subject: "sign in",
+          type: [1],
+        },
+        {
+          subject: "password changed",
+          type: [1],
+        },
+      ];
+      const network = new brain.recurrent.LSTM();
+      const trainData = data.map((email) => ({
+        input: email.subject,
+        output: email.type,
+      }));
+
+      network.train(trainData, {
+        iterations: 500, // 2000
+      });
+
+      const output = document.querySelector(".output");
+      const btn = document.querySelector("button");
+
+      btn.addEventListener("click", () => {
+
+        const input = document.querySelector("input").value;
+        const result = network.run(input);
+
+        if (result !== 0) {
+          output.innerHTML = "Not a Spam email";
+        } else {
+          output.innerHTML = "Spam email";
+        }
+
+      });
+    </script>
+  </body>
+</html>
